@@ -15,8 +15,10 @@ namespace WeatherBot.Commands
                 return;
             }
 
-            Bot.Latitude = e?.Message?.Location?.Latitude;
-            Bot.Longitude = e?.Message?.Location?.Longitude;
+            var user = UserExistCommand.GetUser(e.Message.Chat.Id);
+
+            user.Latitude = e?.Message?.Location?.Latitude;
+            user.Longitude = e?.Message?.Location?.Longitude;
 
             var replyKeyboard = new ReplyKeyboardMarkup(new[]
             {
@@ -32,7 +34,8 @@ namespace WeatherBot.Commands
                  }
             });
 
-            await Bot.client.SendTextMessageAsync(e?.Message?.From?.Id, "Узнать погоду:", replyMarkup: replyKeyboard);
+            await Bot.client.SendTextMessageAsync(e?.Message?.From?.Id, "Узнать погоду или " +
+                "получить график на 5 дней ( /chart ):", replyMarkup: replyKeyboard);
         }
     }
 }

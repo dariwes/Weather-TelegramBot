@@ -7,8 +7,9 @@ namespace WeatherBot.Commands
     {
         public static async void Execute(object sender, Telegram.Bot.Args.MessageEventArgs e)
         {
-            var message = $"{e?.Message?.Text} от {e?.Message?.From?.FirstName} {e?.Message?.From?.LastName}.";
-            var writePath = @"[path].TXT";
+            var user = UserExistCommand.GetUser(e.Message.From.Id);
+            var message = $"{DateTime.Now}. {e?.Message?.Text} от {user.FirstName} {user.LastName}.";
+            var writePath = @"C:[path].TXT";
 
             try
             {

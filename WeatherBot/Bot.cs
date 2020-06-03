@@ -11,9 +11,6 @@ namespace WeatherBot
     {
         public static readonly TelegramBotClient client = new TelegramBotClient(ReadTokenBot(@"[path].json"));
 
-        public static float? Latitude = null;
-        public static float? Longitude = null;
-
         private static string ReadTokenBot(string filePath)
         {
             TokenInfo jsonObj = JsonConvert.DeserializeObject<TokenInfo>(File.ReadAllText(filePath));
@@ -38,12 +35,16 @@ namespace WeatherBot
         public static void BotSetUp()
         {
             client.OnMessage += StartCommand.Execute;
+            client.OnMessage += UserExistCommand.Execute;
             client.OnMessage += HelpCommand.Execute;
             client.OnMessage += KeyboardCommand.Execute;
             client.OnMessage += LocationWeatherCommand.Execute;
             client.OnMessage += CityWeatherCommand.Execute;
             client.OnMessage += GetLocationCommand.Execute;
             client.OnMessage += WriteToFileCommand.Execute;
+            client.OnMessage += InlineCommand.Execute;
+            client.OnMessage += ChartCommand.Execute;
+            client.OnCallbackQuery += CapitalWeatherCommand.Execute;
         }
 
         public static void Translate()
@@ -56,9 +57,9 @@ namespace WeatherBot
         {
             try
             {
-                using (WebClient wc = new WebClient())
+                using (WebClient webClient = new WebClient())
                 {
-                    string HTMLSource = wc.DownloadString(url);
+                    string HTMLSource = webClient.DownloadString(url);
                     return true;
                 }
             }

@@ -1,4 +1,5 @@
 ﻿using System;
+using WeatherBot.Commands;
 
 namespace WeatherBot
 {

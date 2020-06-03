@@ -16,13 +16,14 @@ namespace WeatherBot.Commands
             StartCommand.Name,
             KeyboardCommand.Name,
             HelpCommand.Name,
+            InlineCommand.Name,
+            ChartCommand.Name
         };
 
         private static readonly TranslationClient client = TranslationClient.Create();
 
         private static readonly ApiAi apiAi = new ApiAi(new AIConfiguration(
-            ReadTokenApiAi(@"[path].json"),
-            SupportedLanguage.Russian));
+            ReadTokenApiAi(@"[path].json"), SupportedLanguage.Russian));
 
         public static string ReadTokenApiAi(string filePath)
         {
@@ -44,7 +45,7 @@ namespace WeatherBot.Commands
             if (!String.IsNullOrEmpty(message))
             {
                 await Bot.client.SendTextMessageAsync(e?.Message?.From?.Id, 
-                    $"<em>Температура в</em> {e?.Message?.Text} {message}.", ParseMode.Html);
+                    $"<em>Температура в {e?.Message?.Text}</em> {message}.", ParseMode.Html);
             }
             else
             {
@@ -53,14 +54,14 @@ namespace WeatherBot.Commands
 
                 if (String.IsNullOrEmpty(message))
                 {
-                    message = "Ерунда какая-то.";
+                    message = "Не понимаю.";
                 }
 
                 await Bot.client.SendTextMessageAsync(e?.Message?.From?.Id, message);
             }
         }
 
-        private static string GetCityWeather(string city)
+        public static string GetCityWeather(string city)
         {
             string response;
             var url = "http://api.openweathermap.org/data/2.5/weather?q=" + city + 
@@ -82,8 +83,8 @@ namespace WeatherBot.Commands
             WeatherResponse weatherResponse = JsonConvert.DeserializeObject<WeatherResponse>(response);
             
             return $"<b>{weatherResponse.Main.Temp} ℃</b>, " +
-                   $"<em>скорость ветра</em> <b>{weatherResponse.Wind.Speed}м/с</b>, " +
-                   $"<em>облачность</em> <b>{weatherResponse.Clouds.All}%</b>";
+                   $"<em>скорость ветра:</em> <b>{weatherResponse.Wind.Speed}м/с</b>, " +
+                   $"<em>облачность:</em> <b>{weatherResponse.Clouds.All}%</b>";
         }
     }
 }
